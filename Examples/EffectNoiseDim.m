@@ -27,7 +27,6 @@ else
     Sigma(:,:,1) = [1  0; 0 1];
     Sigma(:,:,2) = [2  0; 0 2];
     Sigma(:,:,3) = [0.2  0; 0 0.2];
-   
     
 end
 
@@ -36,8 +35,6 @@ Sigma = Sigma .* 0.01;
 Priors = ones(1,3)./3;
 
 %% Plot GMM setup
-
-
 %% Query point and take conditional
 
 x                       = [0,0.2,0.5];
@@ -52,8 +49,6 @@ for i=1:length(x)
     Mu_x{i}     = squeeze(Mu_c(:,1,:))';
     Sigma_x{i}  = squeeze(Sigma_c);
 end
-
-%%
 
 
 %% Plot conditional

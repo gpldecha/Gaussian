@@ -4,16 +4,6 @@ clear all;
 
 rot_mat = @(theta) [cos(theta), -sin(theta);sin(theta) cos(theta)];
 
-Priors = [0.5,0.5];
-Priors = [1];
-Mu     = [-2 0]';
-
-Sigma  = [];
-Sigma  =  rot_mat(pi/10) * [3,0;0,0.1];
-%Sigma(:,:,2) = [3,0;0,0.1];
-
-%%
-
 Priors       = [0.5,0.5];
 Mu(:,1)      = [-2 0]';
 Mu(:,2)      = [2 1]';
@@ -22,16 +12,7 @@ Sigma(:,:,1) = rot_mat(pi/5) * [3,0;0,0.1];
 Sigma(:,:,2) = rot_mat(-pi/5) * [3,0;0,0.1];
 
 
-Mu
-Sigma
-
-
-
-
-%% Plot 2D gaussian (in 2D)
-
-
-% Condition
+%% Condition the GMM at x = [-3,0,2]
 
 x     = [-3,0,2];
 in    = 1;
@@ -46,32 +27,19 @@ disp('------------');
 disp(['in:  ' num2str(in)  ]);
 disp(['out: ' num2str(out) ]);
 
-% Priors_c = 1;
-% A        = inv(Sigma);
-% %          Mu_a - A_aa^-1 A_ab (x - Mu_b)sss
-%Mu_c     = Mu(out,1) + Sigma(out,in,1) * inv(Sigma(in,in,1)) * (x - Mu(in,1));
-% %Sigma_c  = inv(A(out,out));%Sigma(out,out) - Sigma(out,in) *- inv(Sigma(in,in)) * Sigma(in,out);
-% Sigma_c  = Sigma(out,out) - Sigma(out,in) * inv(Sigma(in,in)) * Sigma(in,out);
-
-%disp('test');
-%Mu_c
 
 [Priors_c,Mu_c,Sigma_c] = GMC(Priors, Mu, Sigma, x, in, out);
+Mu_c                    = squeeze(Mu_c)';
 
+%% Plot the Conditional of the GMM and one of the three samples
 
-
-s = 3; % sample 1
+s        = 2; % sample 1
 
 Priors_x = Priors_c(s,:); 
-Mu_x     = squeeze(Mu_c(:,s,:))';
+Mu_x     = squeeze(Mu_c(:,s))';
 Sigma_x  = squeeze(Sigma_c);
 
-%% Plot conditional
 
-[xs,ys] = plot_gmm(Priors_x,Mu_x,Sigma_x);
-
-
-%%
 close all;
 figure; 
 subplot(1,2,1);
@@ -89,13 +57,13 @@ end
 plot(X,Y,'-r');
 
 if out == 1
- %   plot(Mu_x(1),x(s),'or');
-  %  plot(Mu_x(1) + 3 .* sqrt(Sigma_x(1)),x(s),'or');
-  %  plot(Mu_x(1) - 3 .* sqrt(Sigma_x(1)),x(s),'or');
+    plot(Mu_x(1),x(s),'or');
+    plot(Mu_x(1) + 3 .* sqrt(Sigma_x(1)),x(s),'or');
+    plot(Mu_x(1) - 3 .* sqrt(Sigma_x(1)),x(s),'or');
 else
-   % plot(x(s),Mu_x(2),'or');
-   % plot(x(s),Mu_x(1) + 3 .* sqrt(Sigma_x(1)),'or');
-   % plot(x(s),Mu_x(1) - 3 .* sqrt(Sigma_x(1)),'or');
+    plot(x(s),Mu_x(2),'or');
+    plot(x(s),Mu_x(1) + 3 .* sqrt(Sigma_x(1)),'or');
+   plot(x(s),Mu_x(1) - 3 .* sqrt(Sigma_x(1)),'or');
 end
 
 xlabel('x','FontSize',14);
@@ -104,9 +72,9 @@ axis equal;
 
 
 subplot(1,2,2);hold on; grid on;
-[xs,ys] = plot_gmm(Priors_x,Mu_x,Sigma_x);
+[xs,ys] = plot_gmm_1D(Priors_x,Mu_x,Sigma_x);
 plot(xs,ys,'-r');
-xlim([min(Y) max(Y)]);
+%xlim([min(Y) max(Y)]);
 
 if(out == 2)
     xlabel('y');

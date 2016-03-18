@@ -8,6 +8,7 @@ handles = zeros(K,1);
 
 weights = rescale(Priors,min(Priors),max(Priors),0.01,0.8);
 
+weights(isnan(weights)==1) = 0.8;
 
 for k = 1:K    
     [x,y,z] = sphere(npts);
