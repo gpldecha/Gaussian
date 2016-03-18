@@ -1,4 +1,5 @@
 %% Example of plotting a 2D Gaussian Mixture Model
+clear all;
 %% 1) Generate a random GMM
 
 
